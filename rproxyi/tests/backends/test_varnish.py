@@ -23,7 +23,7 @@ class VarnishCacheTest(TestCase):
         """Test set up."""
         self.cache_url = 'http://localhost:8080'
         self.handler = VarnishCache(self.cache_url)
-        self.domain = 'primarysite.net'
+        self.domain = 'acme.co.uk'
         self.headers = {'host': self. domain}
         self.path = '/some/path'
         self.url = self.cache_url + self.path
