@@ -10,4 +10,6 @@
 *.tmproj
 *~
 .*
+*.egg-info
+setup.cfg
 pip-log.txt
