@@ -13,7 +13,7 @@ class CacheHandler(object):
 
     def __init__(self, cacheconfig):
         """
-        Initiallize a cache.
+        Initialise a cache.
 
         cacheconfig is a list of dictionaries e.g.:
         [

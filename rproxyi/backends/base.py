@@ -12,7 +12,7 @@ class CacheInvalidationHandler(object):
 
     def __init__(self, location):
         """
-        Initiallize a cache.
+        Initialise a cache.
 
         Location is the fully qualified URL to contact the cache server.
         """
