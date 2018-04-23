@@ -7,6 +7,7 @@ from unittest import TestCase
 import requests
 from httmock import HTTMock
 from httmock import all_requests
+from httmock import response
 
 # Local
 from ...backends.varnish import VarnishCache
@@ -20,7 +21,7 @@ except ImportError:
 @all_requests
 def response_content(url, request):
     """Fake an error response for HTTMock."""
-    return {'status_code': 500, 'content': 'FAIL'}
+    return response(500, 'FAIL', request=request)
 
 
 class VarnishCacheTest(TestCase):
