@@ -5,6 +5,8 @@ from unittest import TestCase
 
 # 3rd-party
 import requests
+from httmock import HTTMock
+from httmock import all_requests
 
 # Local
 from ...backends.varnish import VarnishCache
@@ -13,6 +15,12 @@ try:
     from unittest import mock
 except ImportError:
     import mock
+
+
+@all_requests
+def response_content(url, request):
+    """Fake an error response for HTTMock."""
+    return {'status_code': 500, 'content': 'FAIL'}
 
 
 class VarnishCacheTest(TestCase):
@@ -65,15 +73,12 @@ class VarnishCacheTest(TestCase):
         mock_log.assert_called_once_with(msg)
 
     @mock.patch('rproxyi.backends.varnish.logger.error')
-    @mock.patch('requests.request')
-    def test_http_error_logs_and_finishes(self, mock_request, mock_log):
+    def test_http_error_logs_and_finishes(self, mock_log):
         """A http error."""
-        mock_request.return_value.status_code == 500
-        self.handler._request('BAN', self.domain, self.path)
-        msg = ('Problems connecting to {0}: {1} {2}'
-               .format(self.url,
-                       mock_request.return_value.status_code,
-                       mock_request.return_value.body))
+        with HTTMock(response_content):
+            self.handler._request('BAN', self.domain, self.path)
+        params = (self.url, 500, 'FAIL')
+        msg = 'Problems connecting to {0}: {1} {2}'.format(*params)
         mock_log.assert_called_once_with(msg)
 
     @mock.patch('requests.request')
