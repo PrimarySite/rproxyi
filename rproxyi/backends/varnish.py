@@ -37,8 +37,11 @@ class VarnishCache(CacheInvalidationHandler):
             logger.error('ConnectionError {0}'.format(url))
             return
         if response.status_code != 200:
-            msg = 'Problems connecting to {0}: {1} {2}'.format(
-                url, response.status_code, getattr(response, 'text', 'n/a'))
+            msg = 'Problems connecting to {0}: ({1}) {2}'.format(
+                url,
+                getattr(response, 'status_code', 'n/a'),
+                getattr(response, 'text', 'n/a')
+            )
             logger.error(msg)
 
     def _ban(self, domain, path):
