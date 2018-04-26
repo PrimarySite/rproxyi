@@ -79,7 +79,7 @@ class VarnishCacheTest(TestCase):
         with HTTMock(response_content):
             self.handler._request('BAN', self.domain, self.path)
         params = (self.url, 500, 'FAIL')
-        msg = 'Problems connecting to {0}: {1} {2}'.format(*params)
+        msg = 'Problems connecting to {0}: ({1}) {2}'.format(*params)
         mock_log.assert_called_once_with(msg)
 
     @mock.patch('requests.request')
