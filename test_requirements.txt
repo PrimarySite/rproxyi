@@ -21,5 +21,5 @@ pydocstyle==2.1.1
 pyflakes==2.0.0
 pytest-cov==2.6.0
 pytest==3.8.0
-radon==1.4.2
+radon==2.2.0
 requests==2.12.4
