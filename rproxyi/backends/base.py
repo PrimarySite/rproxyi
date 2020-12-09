@@ -18,12 +18,12 @@ class CacheInvalidationHandler(object):
         Location is the fully qualified URL to contact the cache server.
         """
         parsed = urlparse(location)
-        assert parsed.scheme in ["http", "https"]
-        assert parsed.netloc
-        assert not parsed.path
-        assert not parsed.params
-        assert not parsed.query
-        assert not parsed.fragment
+        assert parsed.scheme in ["http", "https"]  # nosec
+        assert parsed.netloc  # nosec
+        assert not parsed.path  # nosec
+        assert not parsed.params  # nosec
+        assert not parsed.query  # nosec
+        assert not parsed.fragment  # nosec
         self.location = location
 
     def invalidate_page(self, domain, path, purge=False):

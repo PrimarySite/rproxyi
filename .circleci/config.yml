@@ -1,8 +1,9 @@
 ---
+version: 2.1
+
 py-cache-key:
   &py-cache-key py-{{ checksum "requirements/development.txt" }}
 
-version: 2.1
 jobs:
   run_tests:
     docker:
@@ -48,7 +49,7 @@ jobs:
           name: Run tests
           command: |
               source venv/bin/activate
-              pytest rproxyi/tests.py --cov=rproxyi --cov-report term
+              pytest rproxyi/tests --cov=rproxyi --cov-report term
       - run:
           name: Complexity
           command: |

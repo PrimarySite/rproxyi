@@ -19,12 +19,12 @@ class VarnishCache(CacheInvalidationHandler):
 
     def _request(self, method, domain, path):
         """Abstract the request to the proxy."""
-        assert method in ["BAN", "PURGE"]
+        assert method in ["BAN", "PURGE"]  # nosec
         headers = {"host": domain}
         url = self.location + path
         parsed = urlparse(url)
-        assert parsed.netloc == urlparse(self.location).netloc
-        assert path.startswith(parsed.path)
+        assert parsed.netloc == urlparse(self.location).netloc  # nosec
+        assert path.startswith(parsed.path)  # nosec
         logger.debug(f"Method: {method} Url: {url} Path: {path}")
         try:
             response = requests.request(method, url, headers=headers)
