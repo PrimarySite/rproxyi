@@ -8,7 +8,6 @@ from .backends.varnish import VarnishCache
 
 
 class CacheHandler(object):
-
     """Base class to handle cache invalidation."""
 
     def __init__(self, cacheconfig):
@@ -22,10 +21,10 @@ class CacheHandler(object):
         """
         self._caches = []
         for cache in cacheconfig:
-            if cache['BACKEND'] == 'varnish':
-                self._caches.append(VarnishCache(cache['LOCATION']))
+            if cache["BACKEND"] == "varnish":
+                self._caches.append(VarnishCache(cache["LOCATION"]))
         if not self._caches:
-            warnings.warn('No caches set up - caching disabled')
+            warnings.warn("No caches set up - caching disabled")
 
     def invalidate_page(self, domain, path, purge=False):
         """
