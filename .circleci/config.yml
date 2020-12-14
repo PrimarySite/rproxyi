@@ -1,0 +1,68 @@
+---
+version: 2.1
+
+py-cache-key:
+  &py-cache-key py-{{ checksum "requirements/development.txt" }}
+
+jobs:
+  run_tests:
+    docker:
+      - image: python:3.7.9
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+    steps:
+      - checkout
+      - restore_cache:
+          key: *py-cache-key
+      - run:
+          command: |
+            python3 -m venv venv
+            source venv/bin/activate
+            pip install --upgrade pip
+            pip install --use-feature=2020-resolver -r requirements/development.txt
+      - save_cache:
+          key: *py-cache-key
+          paths:
+            - 'venv'
+      - run:
+          name: Flake8
+          command: |
+              source venv/bin/activate
+              flake8 rproxyi
+      - run:
+          name: Black
+          command: |
+              source venv/bin/activate
+              black -l 99 --check rproxyi
+      - run:
+          name: Lint Yaml
+          command: |
+              source venv/bin/activate
+              yamllint .circleci/config.yml
+      - run:
+          name: Run bandit to report security issues
+          command: |
+              source venv/bin/activate
+              bandit -x rproxyi/tests/ -r rproxyi
+      - run:
+          name: Run tests
+          command: |
+              source venv/bin/activate
+              pytest rproxyi/tests --cov=rproxyi --cov-report term
+      - run:
+          name: Complexity
+          command: |
+              source venv/bin/activate
+              echo '----------Cyclomatic complexity -----------'
+              radon cc --min B --average --total-average \
+                rproxyi
+              echo '----------Maintainability Index-----------'
+              radon mi --min B rproxyi
+              echo '-----Lizard Cyclomatic Complexity for python-------'
+              lizard -l python -w rproxyi
+workflows:
+  version: 2
+  tests:
+    jobs:
+      - run_tests

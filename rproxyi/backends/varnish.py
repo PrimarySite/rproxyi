@@ -3,6 +3,7 @@
 # Standard Library
 import logging
 import warnings
+from urllib.parse import urlparse
 
 # 3rd-party
 import requests
@@ -10,37 +11,31 @@ import requests
 # Local
 from .base import CacheInvalidationHandler
 
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
-
 logger = logging.getLogger(__name__)
 
 
 class VarnishCache(CacheInvalidationHandler):
-
     """Cache invalidation handler for varnish."""
 
     def _request(self, method, domain, path):
         """Abstract the request to the proxy."""
-        assert method in ['BAN', 'PURGE']
-        headers = {'host': domain}
+        assert method in ["BAN", "PURGE"]  # nosec
+        headers = {"host": domain}
         url = self.location + path
         parsed = urlparse(url)
-        assert parsed.netloc == urlparse(self.location).netloc
-        assert path.startswith(parsed.path)
-        logger.debug('Method: {0} Url: {1} Path: {2}'.format(method, url, path))
+        assert parsed.netloc == urlparse(self.location).netloc  # nosec
+        assert path.startswith(parsed.path)  # nosec
+        logger.debug(f"Method: {method} Url: {url} Path: {path}")
         try:
             response = requests.request(method, url, headers=headers)
         except requests.exceptions.ConnectionError:
-            logger.error('ConnectionError {0}'.format(url))
+            logger.error(f"ConnectionError {url}")
             return
         if response.status_code != 200:
-            msg = 'Problems connecting to {0}: ({1}) {2}'.format(
+            msg = "Problems connecting to {0}: ({1}) {2}".format(  # noqa: SFS201
                 url,
-                getattr(response, 'status_code', 'n/a'),
-                getattr(response, 'text', 'n/a')
+                getattr(response, "status_code", "n/a"),
+                getattr(response, "text", "n/a"),
             )
             logger.error(msg)
 
@@ -60,7 +55,7 @@ class VarnishCache(CacheInvalidationHandler):
             return(synth(200, "Ban added for "+ req.http.host + " @ " + req.url));
         }
         """
-        self._request('BAN', domain, path)
+        self._request("BAN", domain, path)
 
     def _purge(self, domain, path):
         """
@@ -75,7 +70,7 @@ class VarnishCache(CacheInvalidationHandler):
             return (purge);
         }
         """
-        self._request('PURGE', domain, path)
+        self._request("PURGE", domain, path)
 
     def invalidate_page(self, domain, path, purge=False):
         """
@@ -96,5 +91,5 @@ class VarnishCache(CacheInvalidationHandler):
         If purge is true then the page gets evicted from the cache immediately.
         """
         if purge:
-            warnings.warn('Purge not implemented for invalidate_path')
+            warnings.warn("Purge not implemented for invalidate_path")
         self._ban(domain, path)
