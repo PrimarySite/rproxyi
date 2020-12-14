@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 """Cache invalidation."""
-try:
-    # Standard Library
-    from urllib.parse import urlparse
-except ImportError:
-    # 3rd-party
-    from urlparse import urlparse
+
+# Standard Library
+from urllib.parse import urlparse
 
 
 class CacheInvalidationHandler(object):
