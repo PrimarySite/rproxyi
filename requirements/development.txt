@@ -38,5 +38,5 @@ pytest==6.1.2
 pytest-bdd==4.0.2
 pytest-cov==2.10.1
 radon==4.3.2
-sqlparse==0.4.1
+sqlparse==0.4.2
 yamllint==1.25.0
