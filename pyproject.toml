@@ -1,0 +1,21 @@
+[project]
+name = "rproxyi"
+version = "1.0.0"
+readme = "README.md"
+description = "Reverse proxy Invalidation"
+dependencies = [
+  "requests>=2.25.0",
+]
+keywords=["rproxyi"]
+requires-python = ">= 3.9"
+authors = [{name = "PrimarySite"}]
+maintainers = [{name="PrimarySite"}]
+classifiers=[
+  "Intended Audience :: Developers",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+]
+
+[project.urls]
+Homepage="https://github.com/PrimarySite/rproxyi"
